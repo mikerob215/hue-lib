@@ -1,8 +1,7 @@
-import axios from 'axios';
-import {prop, indexBy} from 'ramda';
-import {Observable} from "@reactivex/rxjs";
+import {indexBy, prop} from 'ramda';
+import {HttpGet} from "./utils/http-utils";
 
-interface Hub {
+interface IHub {
     id: HubId;
     internalipaddress: InternalIpAddress;
 }
@@ -10,19 +9,15 @@ interface Hub {
 type HubId = string;
 type InternalIpAddress = string;
 
-export function HttpGet<Response>(url: string, config?) {
-    return Observable.fromPromise<Response>(axios.get(url, config).then(prop('data')))
-}
-
 export function discover() {
-    return HttpGet<Hub[]>('https://www.meethue.com/api/nupnp').map(indexBy(prop('id')))
+    return HttpGet<IHub[]>('https://www.meethue.com/api/nupnp').map(indexBy(prop('id')));
 }
 
-export function hueFactory(hub: Hub) {
+export function hueFactory(hub: IHub) {
 
     return {
         connect() {
-            return HttpGet(`http://${hub.internalipaddress}/api/hue-lib`)
-        }
-    }
+            return HttpGet(`http://${hub.internalipaddress}/api/hue-lib`);
+        },
+    };
 }
