@@ -1,5 +1,3 @@
-import {discover, hueFactory} from "./HueFactory";
+import {Hue} from "./lib/Hue";
 
-discover().subscribe((hubIndex) => {
-    Object.keys(hubIndex).forEach((id) => hueFactory(hubIndex[id]).connect().subscribe(console.log));
-});
+export default Hue;
